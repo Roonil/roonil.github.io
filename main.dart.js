@@ -99260,7 +99260,7 @@ p=n?p.b:o
 q.Yq(new A.tH(A.ae([B.aR,new A.h2(m),B.V,new A.h2(l),B.aS,new A.h2(k),B.ay,new A.h2(j),B.aZ,new A.h2(i),B.B,new A.h2(p)],t.LH,t.cD)))
 s=r[1].Yq(B.WB)
 r=A.b([new A.Bk(new A.azh(),null,null,t.GX)],t.Ds)
-return A.b_h(new A.Eq(new A.a8y(),this.f,"WayVes Web",s,null),r)}}
+return A.b_h(new A.Eq(new A.a8y(),this.f,"WayVes Wiki",s,null),r)}}
 A.azi.prototype={
 $3(a,b,c){return B.DR},
 $C:"$3",
@@ -108479,7 +108479,7 @@ $.b7G=A.b(["heightRatio","strength","radius","density","index","color","interCha
 $.b7H=A.b(["The Extent of the height of the `Chain`, compared to the total height of the Window","The overall visibility of the `Particles` within the `Chain`. Set it to a very low value. Higher values make the displacements broader in height","The radius of the `Chain`","The number of `Particles` within a section of the `Chain`","The index of the current `Particle` in the `Chain`.","Color of the `Chain`",u.eD,"The height of the center line of the `Chain`.","Determines the color drop-off as `Particles` go vertically away from the `Chain's` center. Between 0 and 1."],t.s)
 $.b7E=A.b(["float","float","float","float","float","vec4","float","float","float"],t.s)
 $.b7F=A.b(["1","0.175","15","128","-","vec4(0,1,1,1)","12","10","0.02"],t.s)
-$.b91=A.b(["-f","-c","-z","-x","-l","-r","-t","-b","-s","-p","-u","-d","-v","-w","-h"],t.s)
+$.b91=A.b(["-f","-c","-z","-x","-l","-r","-t","-b","-s","-p","-u","-d","-v","-w","-h","-V"],t.s)
 $.b72=A.b(["Specifies the name of the YAML Configuration file to use (without `.yaml` extension). No other Arguments can be supplied together with this one","Name of the Class of the `Shader` or `Paintable` to modify the Window Properties of. Properties apply to all Windows if no Class Name is specified","Changes the layer of the Window. 0: `Background`, 1: `Bottom`, 2: `Top`, 3: `Overlay`","Specifies whether to enable Exclusive Layer for this Window. 0: `False`, 1: `True`","Specifies the Left Margin of the Window","Specifies the Right Margin of the Window","Specifies the Top Margin of the Window","Specifies the Bottom Margin of the Window","Specifies whether the Window should be anchored to the Left Edge. 0: `False`, 1: `True`","Specifies whether the Window should be anchored to the Right Edge. 0: `False`, 1: `True`","Specifies whether the Window should be anchored to the Top Edge. 0: `False`, 1: `True`","Specifies whether the Window should be anchored to the Bottom Edge. 0: `False`, 1: `True`","Toggles the Visibility of the Window. Specifying 0 or 1 with the argument will enforce the Visibility to be On or Off.  Note that the `Paintable` Objects also get the same visibility as that of the primary `Shader` they mirror.","Specifies Window Width","Specifies Window Height","Prints the current Version"],t.s)
 $.b7e=A.b(["name","pipewire-settings","audio-overrides","shaders"],t.s)
 $.b7f=A.b(["Name of the Audio Capturing thread","Represents Audio Capturing properties, such as `Sample Rate` and `Buffer Size`. Consumed by PipeWire","Represents Audio Transformation properties, such as `minimum / maximum frequency`, `smoothing` parameters, and `averaging / gravity` parameters","Represents the list of Shaders that take in as input the transformed Audio values for visualisation"],t.s)
