@@ -35,6 +35,11 @@ jobs:
         run: |
           npm install
           npx tsx js/parseAllFiles.js
+      
+      - name: Generate Sitemap
+        run: |
+          npx static-sitemap-cli --base "https://roonil.github.io" -r ./web
+
 
       - name: Set up Java
         uses: actions/setup-java@v4

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://roonil.github.io/sitemap.xml
