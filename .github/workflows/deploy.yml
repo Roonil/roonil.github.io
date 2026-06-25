@@ -38,7 +38,7 @@ jobs:
       
       - name: Generate Sitemap
         run: |
-          npx static-sitemap-cli --base "https://roonil.github.io" -r ./web
+          npx static-sitemap-cli --base "https://roonil.github.io" -r ./web --slash
 
 
       - name: Set up Java
