@@ -24,7 +24,7 @@ Especially for Debian-based distros, `GTK4 Layer Shell` and `LibCYAML` Packages 
 
 # Installation
 ```bash
-git clone https: //github.com/Roonil/WayVes
+git clone https://github.com/Roonil/WayVes
 cd WayVes 
 mkdir -p build/objects 
 make 
