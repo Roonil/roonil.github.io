@@ -141,7 +141,7 @@ class _SectionedScreenState extends State<SectionedScreen> {
                   width: 40,
 
                   height: 40,
-                  'assets/images/github.svg',
+                  'images/github.svg',
                 ),
               ),
             ),
