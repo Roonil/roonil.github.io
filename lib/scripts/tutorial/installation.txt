@@ -1,0 +1,15 @@
+Packages:
+Arch : gtk4 gtk4-layer-shell pipewire
+Debian : libgtk-4-dev libgtk4-layer-shell-dev (might need to be built from source) libpipewire-0.3-dev
+
+Requirements:
+WayVes needs GTK4, GTK4 Layer Shell, LibCYAML and PipeWire packages to be installed on your system
+
+For Arch:
+sudo pacman -S gtk4 gtk4-layer-shell cyaml pipewire
+
+
+For Debian:
+sudo apt install libgtk-4-dev libgtk4-layer-shell-dev libcyaml-dev libpipewire-0.3-dev
+
+GTK4 Layer Shell and LibCYAML Packages might not be available for your System. In this case, build and install from Source 

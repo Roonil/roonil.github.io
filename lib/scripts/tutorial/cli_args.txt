@@ -1,0 +1,5 @@
+WayVes supports passing in CLI Arguments to specify a different config.yaml file, or to change layout properties of Visualiser Windows, such as:
+Margins,
+Anchors,
+Layer
+and so on.

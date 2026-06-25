@@ -1,0 +1,5 @@
+uniform, define and such
+
+resolution, time, gl_FragCoord.xy and FragColor
+
+// Include note to prohibit using gl_FragCoord.xy and FragColor directly in Angular and Linear

@@ -1,0 +1,11 @@
+WayVes reads from a YAML file that specifies the layout and positioning of each Shader / Visualiser on the Screen, along with the Audio Properties that alter the behaviour of the Visualisers' Reactions to the captured Audio Data
+
+By default, 'config.yaml' file present in $XDG_CONFIG_HOME is read. You can specify the name of a different .yaml file (also present in $XDG_CONFIG_HOME) by specifiying the '-f' CLI Argument, followed by the file name (without the extension)
+
+Each Visualiser is an OpenGL Program that (primarily) uses a Fragment Shader to display Visuals, based on the attributes that are supplied to the Shader
+The attributes can be specified using a .glsl file. The .glsl file is parsed and then the assigned properties are fed into the Shader Pipeline 
+
+By default, for a Shader with the name 'ShaderName', the file 'ShaderName.glsl' is read. This behaviour can be overriden by specifying the desired name in the main YAML Configuration file 
+
+To further transform the final output on the Screen, or to modify various Window Properties for the Visualiser, you can use the 'styles.css' file.
+Can be used to rotate and 'embed' a Visualiser onto the Wallpaper, for instance

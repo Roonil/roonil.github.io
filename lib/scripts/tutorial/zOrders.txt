@@ -1,0 +1,82 @@
+Linear and Angular Shaders expose 'Primitives', that can additionally have Caps and / or Connectors. 
+All the objects naturally follow a pre-configured hierarchy in which they appear to be stacked from bottom to top. This is more prominent when the objects have different transparency values
+
+By default, the Objects appear to be stacked from bottom to top as such:
+
+Circle Inner
+Circle Outer
+
+Bar BG
+Inner Bar
+Outer Bar
+Top Cap
+Bottom Cap
+
+Inner Particle
+Outer Particle
+Left Inner Connector
+Right Inner Connector
+Left Outer Connector
+Right Outer Connector
+Top Cap
+Bottom Cap
+
+Inner Particle
+Outer Particle
+Left Inner Connector
+Right Inner Connector
+Left Outer Connector
+Right Outer Connector
+Top Cap
+Bottom Cap
+
+You can modify each SDF or Shape for the Primitives, Caps, and Connectors in the modifySDFs( ) function.
+Additionally, as helper functions, zOrders.glsl contains some logic that can rearrange the 'Z-Index' for each Object within a 'Group' (Bar, Upside Particles and Downside Particles )
+You can import the zOrders.glsl file within your common configuration file (#include "zOrders.glsl" ), then call the necessary functions from the modifySDFs( ) function.
+
+zOrders provides 3 different kinds of 'functionalities', namely, setting the zIndex for each Object / Group, the Color Blend Mode for each Object within a Group, and PassThrough for how 'deep' an Object appears within a group when the Color Blend Mode is not additive; as if the Object at the top 'cuts' the Object(s ) that is / are beneath it.
+
+Listed below are the functions that zOrders exposes. These are described for the Angular Shader, but except for the Circle counter-part, they are the same for the Linear Shader. Ensure that for the Linear Shader, you pass only 3 parameters to the setLayerOffsets( ) function.
+Note that it is absolutely necessary for the values provided to the zIndex functions are all different (as they indicate the zIndex for each Object / Group )
+
+The zIndices that are passed to the functions are all relative, meaning that all the zIndices begin from 0.
+
+setLayerOffsets( int circleOffset, int barOffset, int particleUpOffset, int particleDownOffset ): Sets the Z Index for each Group. setLayerOffsets(1,3,0,2 ) makes the Bars Group appear at the top, followed by Downside Particles, Circle, and finally the Upside Particles
+
+For each Group, there are 3 functions, each for setting the zIndex for each Object within that group (all different values ), for setting the Color Blend Mode of each Object (either 0 or 1 ), and for setting the PassThrough for each 'Intermediate' layer within that group (by excluding the top and bottom layers within that group )
+
+set<GroupName>GroupZIndex( int object1ZIndex, int object2ZIndex, ... ) : Sets the zIndex for each Object within the Group. All passed values must be different, with the lowest value being 0. If the Group has 5 Objects in total, then sending in the values 1, 0, 4, 2, 3 will mean that Object3 will appear at the Top, followed by Object5, Object4, Object1 and then Object2 at the bottom of all Objects.
+set<GroupName>GroupCBM( int object1CBM, int object2CBM, ... ) : Sets the Color Blend Mode for each Object, that decides how the Object 'below' this Object will be rendered, if this Object has some Transparency. Each value is either 0 or 1. Setting 1 means that the Object below this Object will be rendered with the necessary Alpha Blending applied. Setting 0 means that the portion of the Object below this Object won't be rendered, as if this Object 'cuts' the Object below. The extent of this 'cutting' is specified by the PassThrough function.
+set<GroupName>GroupPassThrough( int layer1PassThrough, int layer2PassThrough, ... ) : Sets whether the Object that 'cuts' this layer, should also 'cut' the layer beneath. Each value is either 0 or 1. Setting 0 means that the 'cutting' stops at this layer. Setting 1 means that the current layer should also get 'cut'. This is only effective when an Object with CBM 0 is 'cutting' the current layer.
+
+Circle Group. Mostly Trivial as you should not expect to see any difference as the Inner and Outer Shapes are Mutually Exclusive, but the functions have been provided nonetheless.
+
+void setCircleGroupZIndex( int innerCircleZIndex, int outerCircleZIndex )
+
+void setCircleGroupCBM( int innerCircleCBM, int outerCircleCBM ) 
+
+No Intermediate Layers in this Group, hence no PassThrough.
+
+Bar Group.
+
+void setBarGroupZIndex( int barBGZIndex, int innerBarZIndex, int outerBarZIndex, int upperCapZIndex, int lowerCapZIndex )
+
+void setBarGroupCBM( int barBGCBM, int innerBarCBM, int outerBarCBM, int upperCapCBM, int lowerCapCBM )
+
+void setBarGroupPassThrough( int layer1PassThrough, int layer2PassThrough, int layer3PassThrough )
+
+Upper Particle Group.
+
+void setParticleUpGroupZIndex( int innerParticleUpZIndex, int outerParticleUpZIndex, int leftConnectorInnerZIndex, int rightConnectorInnerZIndex,  int leftConnectorOuterZIndex, int rightConnectorOuterZIndex, int capZIndex )
+
+void setParticleUpGroupCBM( int innerParticleUpCBM, int outerParticleUpCBM, int leftConnectorInnerCBM, int rightConnectorInnerCBM,  int leftConnectorOuterCBM, int rightConnectorOuterCBM, int capCBM )
+
+void setParticleUpGroupPassThrough( int layer1PassThrough, int layer2PassThrough, int layer3PassThrough, int layer4PassThrough, int layer5PassThrough )
+
+Lower Particle Group.
+
+void setParticleDownGroupZIndex( int innerParticleDownZIndex, int outerParticleDownZIndex, int leftConnectorInnerZIndex, int rightConnectorInnerZIndex,  int leftConnectorOuterZIndex, int rightConnectorOuterZIndex, int capZIndex )
+
+void setParticleDownGroupCBM( int innerParticleDownCBM, int outerParticleDownCBM, int leftConnectorInnerCBM, int rightConnectorInnerCBM,  int leftConnectorOuterCBM, int rightConnectorOuterCBM, int capCBM )
+
+void setParticleDownGroupPassThrough( int layer1PassThrough, int layer2PassThrough, int layer3PassThrough, int layer4PassThrough, int layer5PassThrough )

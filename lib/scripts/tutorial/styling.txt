@@ -1,0 +1,5 @@
+You can use the `styles.css` file to further apply GTK-supported CSS effects to the Windows. Class Name for a Shader Window will be the same as specified in the YAML Configuration File.
+
+(INFO) The Class Name actually refers to the underlying 'GTKGLArea' Widget that shows the OpenGL Shader Output. To access Window Properties via CSS, use '#' instead of '.' selector in the CSS before the Class Name. 
+
+It is recommended to use the CSS Styling primarily to transform the final output of the Shaders.

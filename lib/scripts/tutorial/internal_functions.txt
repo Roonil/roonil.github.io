@@ -1,0 +1,21 @@
+Function                                                        Description
+
+genType step(genType x, genType y)                              Returns 1.0 if x <= y, 0.0 otherwise
+genType smoothstep(genType a, float b, float x)                 Performs Smooth Hermite Interpolation of x using a and b as min and max values. Output is in the range [0, 1]
+
+genType mix(genType a, genType b, genType x)                    x should be in the range [0, 1]. x determines the fractional value of b in the final "mixture" of a & b.
+                                                                Calculated as x * b + (1 - x) * a
+                                                                mix(vec4(0, 0, 1, 1), vec4(1, 0, 0, 1), 0.4) means b (vec4(1, 0, 0, 1)) constitues 0.4 (or 40%) of the final output
+
+genType clamp(genType x, genType minVal, genType maxVal)        Input value x is returned, and is restricted in the range [minVal, maxVal]
+
+genType min(genType x, genType y)                               Returns the minimum of the two values
+genType max(genType x, genType y)                               Returns the maximum of the two values
+
+genType sin(genType angle)                                      Returns the sine value of the angle
+genType cos(genType angle)                                      Returns the cosine value of the angle
+genType tan(genType angle)                                      Returns the tangent value of the angle 
+genType asin(gentType x)                                        Returns the angle whose trigonometric sine is x. Returned value is in the range [−π / 2, π / 2]. The result is undefined if |x| > 1
+genType acos(gentType x)                                        Returns the angle whose trigonometric cosine is x. Returned value is in the range [0, π]. The result is undefined if |x| > 1
+genType atan(genType y, genType x),                          Returns either the angle whose trigonometric arctangent is y / x or y_over_x, depending on which overload is invoked. In the first overload, the signs of y and x are used to determine the quadrant that the angle lies in. The value returned by atan in this case is in the range [−π, π]. The result is undefined if x = 0. 
+genType atan(genType y_over_x)                               For the second overload, Returns the angle whose tangent is y_over_x. The value returned in this case is in the range [−π / 2, π / 2]
