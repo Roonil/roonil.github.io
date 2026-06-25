@@ -36,16 +36,20 @@ class _CodeSnippetCardState extends State<CodeSnippetCard> {
     Color bracketsColor = brightness == Brightness.dark
         ? Colors.cyanAccent
         : Colors.cyan;
-    Color objectColor = brightness == Brightness.dark
+    Color objectColor = widget.language == 'bash'
+        ? standardTokenColor
+        : brightness == Brightness.dark
         ? const Color.fromARGB(255, 98, 254, 181)
         : const Color.fromARGB(255, 2, 117, 64);
-    Color attributeColor = brightness == Brightness.dark
+    Color attributeColor = widget.language == 'bash'
+        ? standardTokenColor
+        : brightness == Brightness.dark
         ? const Color.fromARGB(218, 255, 255, 255)
         : const Color.fromARGB(218, 0, 0, 0);
 
     for (String line in widget.textString.split('\n')) {
       for (final (int commentIndex, String commentSeparatedWord)
-          in line.split('//').indexed) {
+          in line.split(widget.language == 'bash' ? '#' : '//').indexed) {
         if (commentIndex.isOdd) {
           children.add(
             TextSpan(
@@ -176,12 +180,17 @@ class _CodeSnippetCardState extends State<CodeSnippetCard> {
                   if (periodIndex != periodSeparatedWords.length - 1) {
                     textStyle = GoogleFonts.openSans(
                       color: objectColor,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: widget.language == "bash"
+                          ? null
+                          : FontWeight.w700,
                     );
                   } else {
                     textStyle = GoogleFonts.openSans(
                       color: attributeColor,
-                      fontWeight: FontWeight.bold,
+
+                      fontWeight: widget.language == "bash"
+                          ? null
+                          : FontWeight.bold,
                     );
                   }
                   children.add(TextSpan(text: periodIndex != 0 ? "." : ""));
