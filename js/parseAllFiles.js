@@ -65,7 +65,6 @@ function generateFullHtmlWrapper(
 </html>`;
   }
 
-  // 2. For deep wiki files, output the high-density SEO overlay layout
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,39 +93,12 @@ function generateFullHtmlWrapper(
       background-color: #ffffff;
     }
 
-    #loading-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 99999;
-    }
-
-    .spinner {
-      width: 45px;
-      height: 45px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #0066cc;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
     #seo-fallback-layer {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       padding: 40px;
-      z-index: 1;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       transition: opacity 0.3s ease;
       opacity: 0
@@ -137,9 +109,7 @@ function generateFullHtmlWrapper(
 </head>
 <body>
 
-  <div id="loading-container">
-    <div class="spinner"></div>
-  </div>
+
 
   <div id="seo-fallback-layer">
     <header role="banner">
@@ -155,28 +125,9 @@ ${bodyContentHtml}
     </main>
   </div>
 
-  <script>
-    window.addEventListener("load", function (ev) {
-      _flutter.loader.load({
-        onEntrypointLoaded: async function(engineInitializer) {
-          let appRunner = await engineInitializer.initializeEngine();
-          
-          await appRunner.runApp();
-          const seoLayer = document.getElementById('seo-fallback-layer');
-          if (seoLayer) {
-            seoLayer.style.opacity = '0';
-            setTimeout(() => seoLayer.style.display = 'none', 300);
-          }
-          const loader = document.getElementById('loading-container');
-          if (loader) {
-            loader.style.transition = 'opacity 0.3s ease';
-            loader.style.opacity = '0';
-            setTimeout(() => loader.remove(), 300);
-          }
-        }
-      });
-    });
-  </script>
+    <script src="/flutter_bootstrap.js" async></script>
+
+  
 </body>
 </html>`;
 }
