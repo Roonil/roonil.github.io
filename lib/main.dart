@@ -1,12 +1,14 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:wayves_wiki/bloc/search_bloc.dart';
 import 'package:wayves_wiki/constants/colors.dart';
 import 'package:wayves_wiki/themes/theme_manager.dart';
 import 'package:wayves_wiki/widgets/sectioned_screen.dart';
 
 void main() {
+  usePathUrlStrategy();
   runApp(const MyApp());
 }
 
