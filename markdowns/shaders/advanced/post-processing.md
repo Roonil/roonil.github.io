@@ -21,8 +21,8 @@ This will insert 2 Passes of the `Glow` Effect at the end of the Render Stage of
 - Each `Post-Processing Effect` is defined as a `Struct` in its corresponding `Primitive` file
 - Since each 'pass' of the `Post-Processing` Shader can have different values for the required attributes, `WayVes` uses the `#expand` directive to specify variable names suffixed by the `number of the currently-ongoing pass - 1`.
 - Each instance of the `Struct Primitive` for each 'pass' of the `Post-Processing` Shader is controlled by the `set<PostProcessingShaderName><PassNumber-1>(inout <PostProcessingShaderName> variableName)` function
-- For example, if `Glow` has 4 passes defined in the Main YAML Spec, the necessary functions that need to be defined are `void setGlow0(inout Glow glow){}`, `void setGlow1(inout Glow glow){}`, and so on.
-- Even if the same effect is encountered in a Chain as such, the effective pass number is still one greater than the last pass encountered. So after 2 passes of a `Post-Processing` Shader, whenever that `Shader` is involved again in the same chain, then the variable suffix will correspond to the 3rd pass (`glow2.blurAmount`)
+- For example, if `Glow` has 4 passes defined in the Main YAML Spec, the necessary functions that need to be defined are `void setGlow0(inout Glow glow) {}`, `void setGlow1(inout Glow glow) {}`, and so on.
+- Even if the same effect is encountered in a Chain as such, the effective pass number is still one greater than the last pass encountered. So after 2 passes of a `Post-Processing` Shader, whenever that `Shader` is involved again in the same chain, then the variable suffix will correspond to the 3rd pass (`setGlow2(inout Glow glow) {}`)
  
 By default, `Glow` and `Rotate` Post-Processing Effects have been provided.
 
