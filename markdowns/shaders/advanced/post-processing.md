@@ -78,7 +78,7 @@ void setGlow1(inout Glow glow) {
 
 ## Rotate at lower Audio Frequencies
 
-Setting  `rotate.angle` to Audio data sampled at lower values will add rotation whenever lower Frequencies are active
+Setting `rotate.angle` to Audio data sampled at lower values will add rotation whenever lower Frequencies are active
 
 ```glsl
 #include ":utils/post-processing/rotate/structs.glsl"
