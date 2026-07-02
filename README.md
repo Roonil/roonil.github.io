@@ -1,6 +1,6 @@
 # WayVes Wiki
 
-Wiki for [WayVes Visualiser](https://github.com/Roonil/WayVes)
+Wiki for [WayVes Visualiser](https://github.com/Roonil/WayVes); Wiki hosted at [https://roonil.github.io](https://roonil.github.io)
 
 Made using Flutter for Web.
 
