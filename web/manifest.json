@@ -4,7 +4,7 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#651FFF",
+  "theme_color": "#27242F",
   "description": "Wiki for WayVes Visualiser - an OpenGL-based Shader Framework for Wayland",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,

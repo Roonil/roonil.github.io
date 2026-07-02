@@ -111,7 +111,41 @@ class _SectionedScreenState extends State<SectionedScreen> {
 
       appBar: AppBar(
         elevation: 5,
+        leading: isLargeScreen
+            ? null
+            : Builder(
+                builder: (context) {
+                  return IconButton(
+                    visualDensity: VisualDensity.compact,
 
+                    padding: EdgeInsets.zero,
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                    icon: Image.asset(
+                      gaplessPlayback: true,
+                      isAntiAlias: true,
+
+                      "images/wayves_logo_animated.webp",
+                      frameBuilder:
+                          (context, child, frame, wasSynchronouslyLoaded) {
+                            if (wasSynchronouslyLoaded || frame != null) {
+                              return child;
+                            }
+
+                            return Image.asset(
+                              "images/wayves_logo.png",
+                              width: 70,
+                              height: 48,
+                              fit: BoxFit.fitHeight,
+                            );
+                          },
+
+                      width: 70,
+                      height: 48,
+                      fit: BoxFit.fitHeight,
+                    ),
+                  );
+                },
+              ),
         backgroundColor: Theme.of(context).brightness == Brightness.light
             ? Theme.of(context).colorScheme.inversePrimary
             : null,
@@ -164,20 +198,66 @@ class _SectionedScreenState extends State<SectionedScreen> {
                   },
                 ),
         ],
+        titleSpacing: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            isLargeScreen
-                ? Flexible(
-                    flex: 5,
-                    child: Text(
-                      "WayVes",
-                      style: GoogleFonts.audiowideTextTheme(
-                        Theme.of(context).textTheme,
-                      ).headlineMedium,
-                    ),
-                  )
-                : const SizedBox(),
+            Flexible(
+              flex: 5,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  isLargeScreen
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                            left: isLargeScreen ? 8.0 : 0,
+                          ),
+
+                          child: Image.asset(
+                            gaplessPlayback: true,
+                            isAntiAlias: true,
+
+                            "images/wayves_logo_animated.webp",
+                            frameBuilder:
+                                (
+                                  context,
+                                  child,
+                                  frame,
+                                  wasSynchronouslyLoaded,
+                                ) {
+                                  if (wasSynchronouslyLoaded || frame != null) {
+                                    return child;
+                                  }
+
+                                  return Image.asset(
+                                    "images/wayves_logo.png",
+                                    width: 70,
+                                    height: 48,
+                                    fit: BoxFit.fitHeight,
+                                  );
+                                },
+
+                            width: 70,
+                            height: 48,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        )
+                      : const SizedBox(),
+
+                  isLargeScreen
+                      ? Flexible(
+                          child: Text(
+                            "WayVes",
+                            style: GoogleFonts.audiowideTextTheme(
+                              Theme.of(context).textTheme,
+                            ).headlineMedium,
+                          ),
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
             isLargeScreen
                 ? Expanded(
                     flex: 10,
