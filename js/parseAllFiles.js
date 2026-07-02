@@ -80,7 +80,7 @@ function generateFullHtmlWrapper(
   
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="icon" type="image/png" href="favicon.png" sizes="48x48" />
   <link rel="manifest" href="manifest.json" />
 
   <style>
@@ -101,11 +101,11 @@ function generateFullHtmlWrapper(
       padding: 40px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       transition: opacity 0.3s ease;
-      opacity: 0
+      opacity: 0;
       }
   </style>
   
-  <script src="flutter_bootstrap.js" async></script>
+  <script src="/flutter_bootstrap.js" async></script>
 </head>
 <body>
 
@@ -124,10 +124,6 @@ ${bodyContentHtml}
       </article>
     </main>
   </div>
-
-    <script src="/flutter_bootstrap.js" async></script>
-
-  
 </body>
 </html>`;
 }

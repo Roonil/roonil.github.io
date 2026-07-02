@@ -1823,3 +1823,6 @@ jsons/shaders/ncs/life-cycle.json
 jsons/shaders/ncs/overview.json
 jsons/updating-properties/cli-arguments.json
 jsons/updating-properties/piping-data.json
+build/web/icons/Icon-16.png
+build/web/icons/Icon-32.png
+build/web/icons/Icon-48.png
