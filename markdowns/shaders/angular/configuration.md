@@ -15,7 +15,7 @@ void init()
 {
 }
 
-void audioFetch(inout float fetchedAudio, int n, int lastN)
+void audioFetch(inout float fetchedAudio, float n, float lastN)
 {
     // fetchedAudio = the value of the fetched audio sample
     // n = the current audio sample index being processed
