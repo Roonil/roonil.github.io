@@ -35,7 +35,7 @@ void setOffsets(float direction, inout vec2 particleOffset, inout vec2 barOffset
     // lastN = the last bar / particle index
 }
 
-void primitiveProps()
+void setProps()
 {
 }
 

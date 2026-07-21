@@ -2062,7 +2062,7 @@ final List<SearchEntry> searchEntries = [
             "Allows dynamic modification of particle and bar offsets based on audio and fragment position.",
       ),
       SearchHit(
-        keyword: "primitiveProps()",
+        keyword: "setProps()",
         heading: "Trivial Working Structure",
         snippet:
             "Sets visual properties of Angular `Primitives`, such as size, softness, and color.",
