@@ -13,6 +13,11 @@ You can install the required packages by specifying the appropriate installation
 pacman -S gtk4 gtk4-layer-shell dbus libcyaml-git pipewire 
 ```
 
+:::warning
+`libcyaml` package on Arch will lead to installation issues. Use `libcyaml-git` specifically for building `WayVes`, or build `libcyaml` manually from git.
+:::
+
+
 ## For Debian:
 ```bash
 apt install libgtk-4-dev libdbus-1-dev libpipewire-0.3-dev 
