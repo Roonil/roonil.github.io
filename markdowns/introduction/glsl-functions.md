@@ -11,11 +11,12 @@ Listed are some common `GLSL Functions` that can be used to obtain specific outp
 | genType clamp(genType x, genType minVal, genType maxVal) | Input value `x` is returned, and is restricted in the range `[minVal, maxVal]` | 
 genType min(genType x, genType y) | Returns the minimum of the two values | 
 | genType max(genType x, genType y) | Returns the maximum of the two values |
-| genType sin(genType angle) | Returns the sine value of the `angle`genType cos(genType angle)Returns the cosine value of the `angle` |
+| genType sin(genType angle) | Returns the sine value of the `angle`|
+| genType cos(genType angle) | Returns the cosine value of the `angle` |
 | genType tan(genType angle) | Returns the tangent value of the `angle` |
 | genType asin(gentType x) | Returns the angle whose trigonometric sine is `x`. Returned value is in the range `[−π / 2, π / 2]`. The result is undefined if `\|x\|` > 1 |
 | genType acos(gentType x) | Returns the angle whose trigonometric cosine is `x`. Returned value is in the range `[0, π]`. The result is undefined if `\|x\|` > 1 |
-| genType atan(genType y, genType x) | Returns either the angle whose trigonometric arctangent is `y` / `x`. The signs of `y` and `x` are used to determine the quadrant that the angle lies in. The value returned by atan in this case is in the range `[−π, π]`. The result is undefined if `x` = 0. |
+| genType atan(genType y, genType x) | Returns either the angle whose trigonometric arctangent is `y` / `x`. The signs of `y` and `x` are used to determine the quadrant that the angle lies in. The value returned by atan in this case is in the range `[−π, π]`. The result is undefined if `x` = 0 and `y` = 0. |
 | genType atan(genType y_over_x) | Returns the angle whose tangent is `y_over_x`. The value returned in this case is in the range `[−π / 2, π / 2]` |
 
 

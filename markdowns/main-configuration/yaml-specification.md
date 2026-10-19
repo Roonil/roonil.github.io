@@ -59,7 +59,8 @@ audios:
 
 | Property | Description |
 | :--- | :--- |
-| sample-rate | Sample Rate that will be used for capturing audio. Consumed by PipeWire.channelsNumber of channels that specify Mono / Stereo capturing.| 
+| sample-rate | Sample Rate that will be used for capturing audio. Consumed by PipeWire. |
+| channels | Number of channels that specify Mono / Stereo capturing.| 
 | fft-scale | Factor for how to scale higher frequencies. Used in a linear equation which is multiplied by the result of the fft transformation.| 
 | fft-cutOff | Cut-Off for the Bass end of the audio data when scaling frequencies. Higher values cause more of the bass frequencies to be skipped when scaling.| 
 | apply-fft | Whether to apply FFT to the captured Audio. Set False for Waveform Audio Output.| 
@@ -93,8 +94,8 @@ audios:
 | sample-hybrid-weight | Should be provided in the range (0, 1). Higher values favor averaged results. For `sample-mode : 2` only.| 
 | sample-scale | Factor used to scale frequencies. Lower values allows lower frequencies to occupy more space.| 
 | sample-range | The frequency range to sample. 1.0 would be the entire FFT output, and lower values reduce the displayed frequencies in a log-like scale.| 
-| smooth-factor | Larger values mean more smoothing in the output, however high values can be expensive to compute.adjacent-| 
-| sample-nums | The Number of samples that are taken from the left and right of the current audio sample, that are also included in the current audio sample. The final result is then averaged based on the number of averaged samples.|
+| smooth-factor | Larger values mean more smoothing in the output, however high values can be expensive to compute.| 
+| adjacent-sample-nums | The Number of samples that are taken from the left and right of the current audio sample, that are also included in the current audio sample. The final result is then averaged based on the number of averaged samples.|
 
 
 </details>
@@ -145,7 +146,7 @@ audios:
 | Property | Description |
 | :--- | :--- |
 | class-name | Class Name to identify the Shader for Styling purposes
-| width, height | Bounds of the Window |
+| window-width, window-height | Bounds of the Window |
 | layer| Specifies the placement of the Shader on the 'Z Axis' on the screen, via the Wayland Layer Shell Protocol. Supported Types are `Background`, `Bottom`, `Top`, and `Overlay` |
 | exclusive-layer | Whether to enable Exclusive Layer for this Window. |
 | anchors | Edges to anchor to | 
