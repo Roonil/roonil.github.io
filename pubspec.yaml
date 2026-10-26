@@ -92,6 +92,7 @@ flutter:
     - jsons/shaders/advanced/
     - jsons/main-configuration/
     - jsons/updating-properties/
+    - jsons/integrations/
     - jsons/recommendations/
   #   - images/a_dot_ham.jpeg
 

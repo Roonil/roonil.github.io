@@ -3587,7 +3587,7 @@ final List<SearchEntry> searchEntries = [
     ],
   ),
   SearchEntry(
-    route: '/integrations/dmabuf',
+    route: '/integrations/dma-buf',
 
     pageTitle: "DMA-BUF Export",
     searchHits: [
