@@ -22,10 +22,38 @@
 | -h | Specifies Window Height | 
 | -V | Prints the current Version | 
 
+---
+
+# Audio Arguments
+
+The `audio` subcommand changes the `pipewire-settings` of a running `Audio` Object, identified by its name. Only the supplied values change, and the PipeWire stream is reconnected only if at least one of them differs from the current value. Audio Arguments cannot be combined with the Window Arguments above.
+
+```bash
+WayVes audio -a music -t alsa_output.usb-headset.analog-stereo
+```
+
+| Property | Description |
+| :--- | :--- |
+| -a | Name of the `Audio` Object to modify. Required |
+| -t | PipeWire node to capture from, by its `object.serial` or `node.name`. Pass an empty string (`-t ""`) to go back to the default node |
+| -f | Audio Format to capture in |
+| -c | Number of Channels |
+| -s | Sample Size in bytes |
+| -g | Fragment Size in bytes |
+| -r | Sample Rate in Hz |
+| -S | FFT Scale |
+| -C | FFT Cut-Off |
+| -m | Whether to capture Microphone Audio. 0: `False`, 1: `True` |
+| -F | Whether to apply FFT to the captured Audio. 0: `False`, 1: `True` |
+
+:::info
+These are the same properties as `pipewire-settings` in the YAML Specification. Changes last until `WayVes` exits, and are not written back to the configuration file.
+:::
+
 
 <footer>
 
 [Prev](piping-data.md)
-[Next](../recommendations/tips.md)
+[Next](../integrations/dma-buf.md)
 
 </footer>

@@ -126,6 +126,10 @@ final NavItem rootNavItem = NavItem(
         ),
       ],
     ),
+    NavItem(
+      title: "Integrations",
+      children: [NavItem(title: "DMA-BUF", route: '/integrations/dma-buf')],
+    ),
 
     NavItem(
       title: "Recommendations",

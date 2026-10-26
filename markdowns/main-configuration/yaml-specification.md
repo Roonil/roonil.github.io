@@ -176,13 +176,17 @@ audios:
 | Property | Description |
 | :--- | :--- |
 | name | Name of the Shader Program to display |
+| config-file | Full name of the Configuration File to use for the Shader. Defaults to `$(name).glsl` |
 | class-name | Class Name to identify the Shader for Styling purposes |
 | fps | Target Framerate |
-| width, height | Bounds of the Window |
+| hot-reload | Whether to reload the Shader in real-time when its `.glsl` files change. Defaults to `true` |
+| window-width, window-height | Bounds of the Window |
 | layer | Specifies the placement of the Shader on the 'Z Axis' on the screen, via the Wayland Layer Shell Protocol. Supported Types are `Background`, `Bottom`, `Top`, and `Overlay` |
 | exclusive-layer | Whether to enable Exclusive Layer for this Window. |
 | image-textures | The number of Image Textures that should be enabled for this Shader |
 | atomic-textures | The number of Atomic Image Textures that should be enabled for this Shader |
+| rendering-mode | Specifies the rendering mode of the Shader. Defaults to `Windowed`.\n0 or `Windowed` : Renders in a normal Window\n1 or `Detached` : Renders to DMA-BUFs only, so the final output can be displayed in a separate Process running on the same GPU\n2 or `Mixed` : Renders normally to a Window, and also exports DMA-BUFs so it can be displayed in another Process running on the same GPU |
+| rendering-sockets | The names of the sockets to send the DMA-BUF file descriptors to, for the `Detached` and `Mixed` rendering modes. Created in the `/tmp/WayVes` directory with a `.sock` suffix. Defaults to the `class-name` when not specified |
 | anchors | Edges to anchor to |
 | margins | Margin from anchored Edges |
 | overrides | GLSL Overrides for specifying different `#define` attribute substitutions |

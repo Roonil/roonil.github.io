@@ -2,9 +2,10 @@
 
 | Property | Data Type | Description | Example |
 | :--- | :---: | :---: | :--- |
-| blendMode | float | Blend mode for the glow effect. 0 = Additive, 1 = Overlay | 0 |
+| blendMode | float | Blend mode for the Glow effect. 0 = Additive, 1 = Overlay | 0 |
 | mixAlpha | float | Whether to use the Alpha Channel for the Glow Effect | 1 |
 | offsetAngle | float | Offset (in degrees) for Glow directions | 90 |
+| colorInfluence | float | Specifies the influence of the supplied Glow color on the final output. 0 Means the Colors from the sample are used, 1 means the supplied Color is used to apply on the Glow Mask/Effect. Between 0 and 1. | 1 |
 | maxAngle | float | Max Angle (in degrees) for Glow directions | 360 |
 | size | vec2 | Size of the Glow | vec2(10,10) |
 | intensity | float | Intensity of the Glow | 0.5 |

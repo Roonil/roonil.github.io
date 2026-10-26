@@ -30,7 +30,7 @@ void setOffsets(float direction, inout vec2 particleOffset, inout vec2 barOffset
     // barSizeOffset = the size offset that will be applied to the bar's size (Upward / Downward height)
     // barAudio = the audio value for the current bar being processed
     // particleAudio = the audio value for the current particle being processed
-    // xCoordinate = the x coordinate of the current fragment being processed
+    // xCoordinate = the centre angle, in degrees along the arc from its start, of the current fragment being processed (before particleOffset.x)
     // n = the current bar / particle index
     // lastN = the last bar / particle index
 }

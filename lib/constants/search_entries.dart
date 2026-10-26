@@ -6,6 +6,25 @@ final List<SearchEntry> searchEntries = [
 
     pageTitle: "CLI Arguments",
     searchHits: [
+      // Audio
+      SearchHit(
+        keyword: "audio",
+        heading: "Audio Arguments",
+        snippet:
+            "The `audio` subcommand changes the PipeWire settings of a running Audio Object, e.g. `WayVes audio -a music -t <node>`.",
+      ),
+      SearchHit(
+        keyword: "--target-object",
+        heading: "Audio Arguments",
+        snippet:
+            "Switches the PipeWire node an Audio Object captures from, by object.serial or node.name. An empty string goes back to the default.",
+      ),
+      SearchHit(
+        keyword: "--capture-mic",
+        heading: "Audio Arguments",
+        snippet: "Toggles capturing Microphone Audio for an Audio Object at runtime.",
+      ),
+
       // Overview
       SearchHit(
         keyword: "CLI Arguments",
@@ -2614,13 +2633,13 @@ final List<SearchEntry> searchEntries = [
         keyword: "rgb",
         heading: "rgb()",
         snippet:
-            "Specify colors using RGB values in the 0–255 range and convert them to normalized vec3 values in GLSL.",
+            "Specify colors using RGB values in the 0 – 255 range and convert them to normalized vec3 values in GLSL.",
       ),
       SearchHit(
         keyword: "rgba",
         heading: "rgba()",
         snippet:
-            "Specify colors using RGBA values in the 0–255 range, including alpha transparency, returning a vec4 color.",
+            "Specify colors using RGBA values in the 0 – 255 range for RGB and 0.0 - 1.0 for Alpha, including alpha transparency, returning a vec4 color.",
       ),
       SearchHit(
         keyword: "hsv",
@@ -3564,6 +3583,43 @@ final List<SearchEntry> searchEntries = [
         heading: "Making Conditions Branchless",
         snippet:
             "step() and mix() can replace if-else blocks for switching colors efficiently.",
+      ),
+    ],
+  ),
+  SearchEntry(
+    route: '/integrations/dmabuf',
+
+    pageTitle: "DMA-BUF Export",
+    searchHits: [
+      SearchHit(
+        keyword: "DMA-BUF",
+        heading: "DMA-BUF Export",
+        snippet:
+            "WayVes can export a Shader's output as a DMA-BUF so another process on the same GPU can display it.",
+      ),
+      SearchHit(
+        keyword: "rendering-mode",
+        heading: "Rendering Modes",
+        snippet:
+            "Windowed renders in a Window, Detached renders to DMA-BUFs only, and Mixed does both.",
+      ),
+      SearchHit(
+        keyword: "rendering-sockets",
+        heading: "Rendering Sockets",
+        snippet:
+            "Each name creates a socket at /tmp/WayVes/<name>.sock. Defaults to the class-name.",
+      ),
+      SearchHit(
+        keyword: "SCM_RIGHTS",
+        heading: "Protocol",
+        snippet:
+            "Each message carries the buffer's file descriptor and its width, height, format, stride, offset and modifier.",
+      ),
+      SearchHit(
+        keyword: "Quickshell",
+        heading: "DMA-BUF Export",
+        snippet:
+            "Shells and widgets can embed WayVes Visualisers by importing the exported DMA-BUFs.",
       ),
     ],
   ),

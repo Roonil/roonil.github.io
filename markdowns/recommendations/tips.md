@@ -107,7 +107,7 @@ When `a` <= `b`, `step()` returns 1, which means that the returned value from th
 
 <footer>
 
-[Prev](../updating-properties/cli-arguments.md)
+[Prev](../integrations/dma-buf.md)
 [Next](performance.md)
 
 </footer>

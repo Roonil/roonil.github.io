@@ -16,15 +16,15 @@ vec3 color = rgb(0, 255, 255); // Cyan
 ```
 
 </details>
-<details><summary><h2>rgba(float r, float g, float b, float a)</h2><h6>Can be used to specify Colors in the `RGBA (0 - 255)` range</h6></summary>
+<details><summary><h2>rgba(float r, float g, float b, float a)</h2><h6>Can be used to specify Colors in the `RGBA (0 - 255,0.0 - 1.0)` range</h6></summary>
 
 ```glsl
 #include ":utils/colors.glsl"
 
-vec4 color = rgba(0, 255, 255, 255); // Cyan
+vec4 color = rgba(0, 255, 255, 1.0); // Cyan
 
-// Each channel value gets divided by 255. You may use float values for finer control
-color = rgba(0, 255, 255, 127.5); // Cyan at 50% Transparency
+// Each RGB channel value gets divided by 255. You may use float values for finer control
+color = rgba(0, 255, 255, 0.5); // Cyan at 50% Transparency
 ```
 
 </details>
@@ -42,12 +42,12 @@ vec3 color = hsv(128, 100, 100); // Green
 ```
 
 </details>
-<details><summary><h2>hsva(float h, float s, float v, float a)</h2><h6>Can be used to specify Colors in the `HSVA (0 - 360, 0 - 100, 0 - 100, 0 - 100)` range</h6></summary>
+<details><summary><h2>hsva(float h, float s, float v, float a)</h2><h6>Can be used to specify Colors in the `HSVA (0 - 360, 0 - 100, 0 - 100, 0.0 - 1.0)` range</h6></summary>
 
 ```glsl
 #include ":utils/colors.glsl"
 
-vec4 color = hsva(128, 100, 100, 50); // Green at 50% Opacity
+vec4 color = hsva(128, 100, 100, 0.5); // Green at 50% Opacity
 
 // You may use float values for finer control
 ```

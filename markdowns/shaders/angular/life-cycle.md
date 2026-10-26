@@ -20,7 +20,8 @@ void init() {
 	particle.audio.multiplier = 120;
 	bar.audio.multiplier = 220;
 
-	// Set circle.center, circle.maxAngle and circle.angleOffset here
+	// Set circle.radius, circle.center, circle.maxAngle and circle.angleOffset here
+	circle.radius = 100;
 	circle.center = vec2(resolution.xy / 2.);
 	circle.maxAngle = 330;
 	circle.angleOffset = 120;
