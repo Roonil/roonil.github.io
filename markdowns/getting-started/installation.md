@@ -9,12 +9,15 @@ You can install the required packages by specifying the appropriate installation
 :::
 
 ## For Arch:
+`libcyaml-git` is in the AUR, so install it with an AUR helper such as `paru` or `yay`:
+
 ```bash
-pacman -S gtk4 gtk4-layer-shell dbus libcyaml-git pipewire libepoxy mesa libglvnd
+sudo pacman -S gtk4 gtk4-layer-shell dbus pipewire libepoxy mesa libglvnd
+paru -S libcyaml-git
 ```
 
 :::warning
-`libcyaml` package on Arch will lead to installation issues. Use `libcyaml-git` specifically for building `WayVes`, or build `libcyaml` manually from git.
+The `libcyaml` package from the official repositories is too old to build `WayVes`. Use `libcyaml-git`, or build `libcyaml` manually from git.
 :::
 
 
@@ -28,20 +31,40 @@ Especially for Debian-based distros, `GTK4 Layer Shell` and `LibCYAML` Packages 
 ---
 
 # Installation
+
 ```bash
 git clone https://github.com/Roonil/WayVes
-cd WayVes 
-mkdir -p build/objects 
-make 
-make install 
+cd WayVes
+make
+sudo make install
 ```
 
-After installation, copy the contents of the `shaders` directory to `$XDG_CONFIG_HOME/WayVes/` as such (Assuming `$XDG_CONFIG_HOME` is `~/.config`):
+`make install` installs the `WayVes` binary to `/usr/local/bin`, and the Shaders, starter configs and advanced configs to `/usr/local/share/WayVes/`. Use `PREFIX` to install somewhere else, passing the same `PREFIX` to both commands, for example `make PREFIX=/usr` and `sudo make PREFIX=/usr install`. Run `make clean` first if you already built with a different `PREFIX`.
+
+:::info
+The Makefile respects `CXXFLAGS`, `CPPFLAGS` and `LDFLAGS`. Without them, `WayVes` is built with debug symbols and no optimisations, so for regular use build it with, for example, `CXXFLAGS="-O2" make`.
+:::
+
+---
+
+# Copying the Shaders
+
+`WayVes` reads the Shaders from `$XDG_CONFIG_HOME/WayVes/` (usually `~/.config/WayVes/`), so copy them there after installing (Assuming `$XDG_CONFIG_HOME` is `~/.config`):
 
 ```bash
-mkdir -p ~/.config/WayVes/ 
-cp -r shaders/* ~/.config/WayVes/ 
+mkdir -p ~/.config/WayVes/
+cp -r /usr/local/share/WayVes/shaders/* ~/.config/WayVes/
 ```
+
+If you installed with a different `PREFIX`, copy from `<PREFIX>/share/WayVes/shaders/` instead. You can also copy straight from the `shaders` directory of the cloned repository.
+
+:::info
+Updating `WayVes` does not update the Shaders in `~/.config/WayVes/`. Copy them again after updating, keeping in mind that this overwrites any changes you made to the shipped Shaders.
+:::
+
+:::info
+If a Shader is missing, `WayVes` prints the exact `cp` command to copy it from the installed Shaders.
+:::
 
 
 <footer>

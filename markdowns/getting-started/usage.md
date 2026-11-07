@@ -23,7 +23,29 @@ To further transform the final output on the Screen, or to modify various Window
 
 # Starter Configuration
 
-Copy the files located at `starter-configs/` to the `$XDG_CONFIG_HOME/WayVes/` directory. Execute `WayVes` by typing in `WayVes` in the terminal. You should see some bars on the bottom-left side of the screen, and the angular counter-part of the bars on the bottom-left of the screen. Play any audio on your Desktop, and you should see the Visualisers react to the Audio in Real-Time!
+Copy the starter configs to the `$XDG_CONFIG_HOME/WayVes/` directory:
+
+```bash
+cp -r /usr/local/share/WayVes/starter-configs/* ~/.config/WayVes/
+```
+
+If you installed with a different `PREFIX`, copy from `<PREFIX>/share/WayVes/starter-configs/` instead. You can also copy from the `starter-configs` directory of the cloned repository. In that case, also copy the repository's `schemas` directory, which editors use for completion in `config.yaml`:
+
+```bash
+cp -r starter-configs/* schemas ~/.config/WayVes/
+```
+
+Execute `WayVes` by typing in `WayVes` in the terminal. You should see some bars on the bottom-left side of the screen, and the angular counter-part of the bars on the bottom-left of the screen. Play any audio on your Desktop, and you should see the Visualisers react to the Audio in Real-Time!
+
+---
+
+# Advanced Configurations
+
+More complete examples are installed to `/usr/local/share/WayVes/advanced-configs/` (`<PREFIX>/share/WayVes/advanced-configs/` with a different `PREFIX`), one directory per configuration. To use one, copy the contents of its directory to `$XDG_CONFIG_HOME/WayVes/`, for example:
+
+```bash
+cp -r /usr/local/share/WayVes/advanced-configs/linear_showCase/* ~/.config/WayVes/
+```
 
 
 <footer>

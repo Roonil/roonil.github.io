@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:wayves_wiki/models/content_target.dart';
 import 'package:wayves_wiki/models/json_content.dart';
 import 'package:wayves_wiki/models/controller_bundle.dart';
+import 'package:wayves_wiki/models/page_outline.dart';
+import 'package:wayves_wiki/widgets/content_anchor.dart';
 
 class ScreenContents extends StatefulWidget {
   final String screenRoute;
@@ -22,11 +25,35 @@ class ScreenContents extends StatefulWidget {
 
 class _ScreenContentsState extends State<ScreenContents> {
   late Future<List<JsonContent>> _jsonAssetFuture;
+  PageOutline? _pageOutline;
 
   @override
   void initState() {
     super.initState();
     _jsonAssetFuture = _fetchAndParseJson(widget.screenRoute);
+    PendingContentTarget.request.addListener(_scrollToPendingTarget);
+  }
+
+  @override
+  void dispose() {
+    PendingContentTarget.request.removeListener(_scrollToPendingTarget);
+    super.dispose();
+  }
+
+  void _scrollToPendingTarget() {
+    final (String, ContentTarget)? request = PendingContentTarget.request.value;
+    final PageOutline? pageOutline = _pageOutline;
+    if (request == null ||
+        pageOutline == null ||
+        request.$1 != '/${widget.screenRoute}') {
+      return;
+    }
+
+    PendingContentTarget.request.value = null;
+    widget.controllerBundle.scrollToLocation(
+      pageOutline.locate(request.$2),
+      highlight: request.$2.matchText != null,
+    );
   }
 
   @override
@@ -56,6 +83,11 @@ class _ScreenContentsState extends State<ScreenContents> {
 
     widget.controllerBundle.onBlocksLoaded(blocks);
 
+    _pageOutline = PageOutline.fromBlocks(blocks);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => mounted ? _scrollToPendingTarget() : null,
+    );
+
     return blocks;
   }
 
@@ -79,14 +111,22 @@ class _ScreenContentsState extends State<ScreenContents> {
 
         final List<JsonContent> wikiBlocks = snapshot.data ?? [];
 
-        return ScrollablePositionedList.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          itemCount: wikiBlocks.length,
-          itemScrollController: scrollController,
-          itemPositionsListener: positionsListener,
-          itemBuilder: (context, index) {
-            return Text.rich(wikiBlocks[index].rendererWidget);
-          },
+        return AnchorScope(
+          registry: widget.controllerBundle.anchorRegistry,
+          child: KeyedSubtree(
+            key: widget.controllerBundle.anchorRegistry.viewportKey,
+            child: ScrollablePositionedList.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              itemCount: wikiBlocks.length,
+              itemScrollController: scrollController,
+              scrollOffsetController:
+                  widget.controllerBundle.scrollOffsetController,
+              itemPositionsListener: positionsListener,
+              itemBuilder: (context, index) {
+                return Text.rich(wikiBlocks[index].rendererWidget);
+              },
+            ),
+          ),
         );
       },
     );

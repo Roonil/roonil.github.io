@@ -6,6 +6,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wayves_wiki/models/json_content.dart';
 import 'package:wayves_wiki/models/controller_bundle.dart';
+import 'package:wayves_wiki/widgets/content_anchor.dart';
 
 import 'beamer_key.dart';
 
@@ -25,8 +26,7 @@ class SectionedScreen extends StatefulWidget {
 class _SectionedScreenState extends State<SectionedScreen> {
   List<String> pathSegments = [];
 
-  ItemScrollController? _sharedScrollController;
-  ItemPositionsListener? _sharedPositionsListener;
+  ControllerBundle? _sharedControllerBundle;
 
   List<JsonContent> _currentActiveBlocks = [];
 
@@ -45,19 +45,18 @@ class _SectionedScreenState extends State<SectionedScreen> {
                 ? 'getting-started/installation'
                 : currentPath;
 
-            final localController = ItemScrollController();
-            final localListener = ItemPositionsListener.create();
-
-            final bundle = ControllerBundle(
-              scrollController: localController,
-              positionsListener: localListener,
+            late final ControllerBundle bundle;
+            bundle = ControllerBundle(
+              scrollController: ItemScrollController(),
+              scrollOffsetController: ScrollOffsetController(),
+              positionsListener: ItemPositionsListener.create(),
+              anchorRegistry: AnchorRegistry(),
               onBlocksLoaded: (List<JsonContent> loadedBlocks) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted) {
                     setState(() {
                       _currentActiveBlocks = loadedBlocks;
-                      _sharedScrollController = localController;
-                      _sharedPositionsListener = localListener;
+                      _sharedControllerBundle = bundle;
                     });
                   }
                 });
@@ -98,13 +97,11 @@ class _SectionedScreenState extends State<SectionedScreen> {
           ? LeftSideDrawer(showBackButton: true, beamerKey: BeamerKey.beamerKey)
           : null,
       endDrawer: !isLargeScreen
-          ? (_sharedScrollController != null &&
-                    _sharedPositionsListener != null)
+          ? _sharedControllerBundle != null
                 ? RightSideDrawer(
                     showBackButton: true,
                     wikiBlocks: _currentActiveBlocks,
-                    scrollController: _sharedScrollController!,
-                    positionsListener: _sharedPositionsListener!,
+                    controllerBundle: _sharedControllerBundle!,
                   )
                 : const SizedBox()
           : null,
@@ -314,14 +311,11 @@ class _SectionedScreenState extends State<SectionedScreen> {
             isLargeScreen
                 ? Flexible(
                     flex: 2,
-                    child:
-                        (_sharedScrollController != null &&
-                            _sharedPositionsListener != null)
+                    child: _sharedControllerBundle != null
                         ? RightSideDrawer(
                             showBackButton: false,
                             wikiBlocks: _currentActiveBlocks,
-                            scrollController: _sharedScrollController!,
-                            positionsListener: _sharedPositionsListener!,
+                            controllerBundle: _sharedControllerBundle!,
                           )
                         : const SizedBox(),
                   )

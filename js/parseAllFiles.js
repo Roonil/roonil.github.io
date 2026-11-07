@@ -2,6 +2,7 @@ import { readdirSync, statSync, mkdirSync, writeFileSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { compileScreen } from "./parser.ts";
+import { indexPage } from "./searchIndex.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -178,6 +179,7 @@ function computeSeoTitle(routePath) {
 
 function runGlobalWorkspaceBuild() {
   const allTargetMarkdownFiles = getAllMarkdownFiles(markdownRootFolder);
+  const searchIndex = [];
 
   allTargetMarkdownFiles.forEach((absoluteFilePath) => {
     const pathRelativeFromRoot = path.relative(
@@ -190,6 +192,14 @@ function runGlobalWorkspaceBuild() {
       const currrentItems = compileScreen(
         path.resolve(rootDir, path.dirname(pathRelativeFromRoot)),
         path.basename(dynamicScreenName),
+      );
+
+      searchIndex.push(
+        indexPage(
+          `/${dynamicScreenName}`,
+          computeSeoTitle(dynamicScreenName),
+          currrentItems,
+        ),
       );
 
       const jsonString = JSON.stringify(currrentItems, skipNullReplacer, 2);
@@ -212,6 +222,14 @@ function runGlobalWorkspaceBuild() {
       );
     }
   });
+
+  searchIndex.sort((a, b) => a.route.localeCompare(b.route));
+  writeFileSync(
+    "jsons/search_index.json",
+    JSON.stringify(searchIndex, skipNullReplacer),
+    "utf-8",
+  );
+  console.log("Successfully exported: jsons/search_index.json");
 
   console.log("\n[COMPLETE]: Master workspace build script finished running!");
 }

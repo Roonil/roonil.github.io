@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:wayves_wiki/models/controller_bundle.dart';
 import 'package:wayves_wiki/models/json_content.dart';
+import 'package:wayves_wiki/models/page_outline.dart';
 
 class RightSideDrawer extends StatefulWidget {
   final List<JsonContent> wikiBlocks;
-  final ItemScrollController scrollController;
-  final ItemPositionsListener positionsListener;
+  final ControllerBundle controllerBundle;
   final bool showBackButton;
 
   const RightSideDrawer({
     super.key,
     required this.wikiBlocks,
-    required this.scrollController,
-    required this.positionsListener,
+    required this.controllerBundle,
     required this.showBackButton,
   });
 
@@ -22,42 +22,45 @@ class RightSideDrawer extends StatefulWidget {
 }
 
 class _RightSideDrawerState extends State<RightSideDrawer> {
-  int? _activeBlockIndex;
+  static const double _activeHeadingThreshold = 48;
+
+  late List<TocEntry> _tableOfContents;
+  TocEntry? _activeEntry;
+
+  bool _isScrollingToEntry = false;
+
+  ItemPositionsListener get _positionsListener =>
+      widget.controllerBundle.positionsListener;
 
   void _syncActiveIndexFromScroll() {
     try {
-      final positions = widget.positionsListener.itemPositions.value;
-      if (positions.isEmpty) return;
+      final positions = _positionsListener.itemPositions.value;
+      if (positions.isEmpty || _tableOfContents.isEmpty) return;
 
-      final visibleItems = positions
+      final int firstVisibleIndex = positions
           .where((ItemPosition pos) => pos.itemTrailingEdge > 0)
-          .toList();
-      if (visibleItems.isEmpty) return;
+          .fold(
+            widget.wikiBlocks.length,
+            (int minimum, ItemPosition pos) =>
+                pos.index < minimum ? pos.index : minimum,
+          );
 
-      visibleItems.sort(
-        (a, b) => a.itemLeadingEdge.abs().compareTo(b.itemLeadingEdge.abs()),
-      );
-      final int topVisibleItemIndex = visibleItems.first.index;
-
-      int? detectedSectionIndex;
-      for (int i = topVisibleItemIndex; i >= 0; i--) {
-        if (i >= widget.wikiBlocks.length) continue;
-
-        final block = widget.wikiBlocks[i];
-        if ((block is ParagraphJsonContent && block.headingNumber != 0) ||
-            block is ExpansionTileJsonContent) {
-          detectedSectionIndex = i;
-          break;
-        }
+      TocEntry detectedEntry = _tableOfContents.first;
+      for (TocEntry entry in _tableOfContents) {
+        final Rect? bounds = widget.controllerBundle.anchorRegistry
+            .boundsInViewport(entry.content);
+        final bool isPassed = bounds != null
+            ? bounds.top <= _activeHeadingThreshold
+            : entry.blockIndex < firstVisibleIndex;
+        if (isPassed) detectedEntry = entry;
       }
 
-      if (detectedSectionIndex != null &&
-          detectedSectionIndex != _activeBlockIndex) {
+      if (detectedEntry != _activeEntry) {
         if (!mounted) {
-          _activeBlockIndex = detectedSectionIndex;
+          _activeEntry = detectedEntry;
         } else {
           setState(() {
-            _activeBlockIndex = detectedSectionIndex;
+            _activeEntry = detectedEntry;
           });
         }
       }
@@ -67,47 +70,62 @@ class _RightSideDrawerState extends State<RightSideDrawer> {
   @override
   void initState() {
     super.initState();
+    _tableOfContents = PageOutline.fromBlocks(
+      widget.wikiBlocks,
+    ).tableOfContents;
 
-    widget.positionsListener.itemPositions.addListener(
-      _onScrollPositionsChanged,
+    _positionsListener.itemPositions.addListener(_onScrollPositionsChanged);
+
+    _resetActiveEntry();
+  }
+
+  void _resetActiveEntry() {
+    _activeEntry = _tableOfContents.firstOrNull;
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _onScrollPositionsChanged(),
     );
+  }
 
-    _syncActiveIndexFromScroll();
+  Future<void> _scrollToEntry(TocEntry entry) async {
+    setState(() {
+      _activeEntry = entry;
+      _isScrollingToEntry = true;
+    });
+
+    await widget.controllerBundle.scrollToLocation(
+      ContentLocation(blockIndex: entry.blockIndex, content: entry.content),
+    );
+    await WidgetsBinding.instance.endOfFrame;
+    _isScrollingToEntry = false;
   }
 
   @override
   void didUpdateWidget(covariant RightSideDrawer oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.positionsListener != widget.positionsListener) {
-      oldWidget.positionsListener.itemPositions.removeListener(
+    if (oldWidget.wikiBlocks != widget.wikiBlocks) {
+      _tableOfContents = PageOutline.fromBlocks(
+        widget.wikiBlocks,
+      ).tableOfContents;
+      _isScrollingToEntry = false;
+      _resetActiveEntry();
+    }
+    if (oldWidget.controllerBundle.positionsListener != _positionsListener) {
+      oldWidget.controllerBundle.positionsListener.itemPositions.removeListener(
         _onScrollPositionsChanged,
       );
-      widget.positionsListener.itemPositions.addListener(
-        _onScrollPositionsChanged,
-      );
+      _positionsListener.itemPositions.addListener(_onScrollPositionsChanged);
     }
   }
 
   void _onScrollPositionsChanged() {
-    if (!mounted) return;
+    if (!mounted || _isScrollingToEntry) return;
 
     _syncActiveIndexFromScroll();
   }
 
-  void _scrollToIndex(int targetIndex) {
-    widget.scrollController.scrollTo(
-      index: targetIndex,
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.fastOutSlowIn,
-      alignment: 0.0,
-    );
-  }
-
   @override
   void dispose() {
-    widget.positionsListener.itemPositions.removeListener(
-      _onScrollPositionsChanged,
-    );
+    _positionsListener.itemPositions.removeListener(_onScrollPositionsChanged);
     super.dispose();
   }
 
@@ -167,74 +185,16 @@ class _RightSideDrawerState extends State<RightSideDrawer> {
                 horizontal: 16.0,
                 vertical: 12.0,
               ),
-              itemCount: widget.wikiBlocks.length,
+              itemCount: _tableOfContents.length,
               itemBuilder: (context, index) {
-                final block = widget.wikiBlocks[index];
-                final bool isActive = _activeBlockIndex == index;
-
-                String textContent = '';
-                bool isSubSection = false;
-
-                if (block is ParagraphJsonContent && block.headingNumber != 0) {
-                  textContent =
-                      ((block.children.firstWhere(
-                                (element) => element is TextJsonContent,
-                                orElse: () => TextJsonContent(
-                                  content: '',
-                                  textTheme: TextTheme(),
-                                  colorScheme: Theme.of(context).colorScheme,
-                                  depth: 0,
-                                ),
-                              ))
-                              as TextJsonContent)
-                          .content;
-                  isSubSection = block.headingNumber > 1;
-                } else if (block is ExpansionTileJsonContent) {
-                  textContent = (block.title.first is TextJsonContent)
-                      ? ((block.title.first as TextJsonContent).content)
-                      : (((block.title.firstWhere(
-                                          (element) =>
-                                              (element is ParagraphJsonContent),
-                                          orElse: () => ParagraphJsonContent(
-                                            children: [
-                                              TextJsonContent(
-                                                content: '',
-                                                textTheme: TextTheme(),
-                                                colorScheme: Theme.of(
-                                                  context,
-                                                ).colorScheme,
-                                                depth: 0,
-                                              ),
-                                            ],
-                                            depth: 0,
-                                          ),
-                                        ))
-                                        as ParagraphJsonContent)
-                                    .children
-                                    .firstWhere(
-                                      (element) => element is TextJsonContent,
-                                    )
-                                as TextJsonContent)
-                            .content;
-
-                  ((block.title[0] is ParagraphJsonContent)
-                      ? ((block.title[0] as ParagraphJsonContent).children[0]
-                                as TextJsonContent)
-                            .content
-                      : (block.title[0] as TextJsonContent).content);
-                } else {
-                  return const SizedBox.shrink();
-                }
-
-                final cleanDisplayTitle = textContent
-                    .replaceAll('`', '')
-                    .replaceAll(':', "");
+                final TocEntry entry = _tableOfContents[index];
+                final bool isActive = _activeEntry == entry;
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 3.0),
                   child: InkWell(
                     onTap: () {
-                      _scrollToIndex(index);
+                      _scrollToEntry(entry);
                       if (widget.showBackButton) Navigator.of(context).pop();
                     },
                     borderRadius: BorderRadius.horizontal(
@@ -244,7 +204,7 @@ class _RightSideDrawerState extends State<RightSideDrawer> {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: EdgeInsets.only(
-                        left: isSubSection ? 20.0 : 10.0,
+                        left: 10.0 + 10.0 * entry.level,
                         right: 10.0,
                         top: 10.0,
                         bottom: 10.0,
@@ -273,7 +233,7 @@ class _RightSideDrawerState extends State<RightSideDrawer> {
                         ),
                       ),
                       child: Text(
-                        cleanDisplayTitle,
+                        entry.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium?.copyWith(

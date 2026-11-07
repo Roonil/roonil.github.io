@@ -1,8 +1,18 @@
 # Noise Functions
 
-You can find many noise function implementations within the `utils/lygia/generative` folder, and some other math functions within the `utils/lygia/math` folder originally created by `lygia`, check [here](https://lygia.xyz/)
+The `NCS` Shader utilises a `4-D Tileable Perlin Noise` implementation from [webgl-noise](https://github.com/stegu/webgl-noise) (MIT), built into the Shader itself.
 
-The `NCS` Shader utilises the `4-D Tileable Perlin Noise` implementation from this library.
+`lygia` is no longer bundled with `WayVes`, as its license conflicts with `WayVes`' GPL. It is still a great collection of noise and math functions (check [here](https://lygia.xyz/)), and you can install it yourself to use in your own Shaders:
+
+```bash
+git clone https://github.com/patriciogonzalezvivo/lygia ~/.config/WayVes/utils/lygia
+```
+
+Then include its files as before, for example `#include ":utils/lygia/generative/pnoise.glsl"`.
+
+:::warning
+`lygia` has its own license (Prosperity / Patron License). Check it [here](https://lygia.xyz/license) before using it.
+:::
 
 ---
 

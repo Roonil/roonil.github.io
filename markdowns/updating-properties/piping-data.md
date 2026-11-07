@@ -60,6 +60,45 @@ Bars' color will change from Red to Blue in this case.
 
 ---
 
+# Animating Values
+
+Instead of jumping to the new value, a `uniform` can animate to it. Add `dur` (the duration in milliseconds) and, optionally, `ease` after the value, separated by `;`:
+
+```bash
+echo "dynamicColor = vec4(0, 0, 1, 1); dur = 400; ease = inOutCubic" >> /tmp/WayVes/linear
+```
+
+The Bars' color will now fade from Red to Blue over 400 milliseconds.
+
+- `dur` and `ease` can come in any order.
+- The animation starts from the `uniform`'s current value, even if a previous animation is still running.
+- `ease` is `linear` by default. Easing names are case-insensitive.
+- Leaving out `dur`, or setting `dur = 0`, applies the value instantly and cancels any running animation for that `uniform`.
+- `vec` and color values animate each component. `int` values are rounded, and `bool` values switch at the end of the animation.
+
+<details><summary>Supported Easings</summary>
+
+| Easing | Description |
+| :--- | :--- |
+| linear | Constant speed |
+| inSine, outSine, inOutSine | Sine curve |
+| inQuad, outQuad, inOutQuad | Quadratic curve |
+| inCubic, outCubic, inOutCubic | Cubic curve |
+| inQuart, outQuart, inOutQuart | Quartic curve |
+| inQuint, outQuint, inOutQuint | Quintic curve |
+| inExpo, outExpo, inOutExpo | Exponential curve |
+| inCirc, outCirc, inOutCirc | Circular curve |
+| inBack, outBack, inOutBack | Overshoots slightly before settling |
+| inElastic, outElastic, inOutElastic | Springs around the target value |
+| inBounce, outBounce, inOutBounce | Bounces against the target value |
+| cubicBezier(x1, y1, x2, y2) | Custom curve, like CSS `cubic-bezier` |
+
+`in` variants start slowly, `out` variants end slowly, and `inOut` variants do both.
+
+</details>
+
+---
+
 <details><summary>Supported Data Types</summary>
 
 | Property | Description |

@@ -35,11 +35,12 @@ class _ImagesViewerState extends State<ImagesViewer> {
 
   @override
   void initState() {
-    widget.viewerImages[0].getStaticDimensions().then(
-      (value) => setState(() {
+    widget.viewerImages[0].getStaticDimensions().then((value) {
+      if (!mounted) return;
+      setState(() {
         initialHeight = value[1];
-      }),
-    );
+      });
+    });
     super.initState();
   }
 

@@ -7,6 +7,7 @@ import 'package:wayves_wiki/constants/custom_divs.dart';
 import 'package:wayves_wiki/helper_functions/rich_text_from_ticks.dart';
 import 'package:wayves_wiki/widgets/beamer_key.dart';
 import 'package:wayves_wiki/widgets/code_snippet_card.dart';
+import 'package:wayves_wiki/widgets/content_anchor.dart';
 import 'package:wayves_wiki/widgets/images_viewer.dart';
 import 'package:wayves_wiki/widgets/table_viewer.dart';
 import 'package:wayves_wiki/widgets/info_card.dart';
@@ -166,6 +167,7 @@ abstract class JsonContent {
           depth: depth,
 
           headingNumber: jsonString['depth'] ?? headingDepth,
+          anchor: jsonString['anchor'],
         );
 
       case MarkdownBlockTypes.div:
@@ -251,6 +253,7 @@ abstract class JsonContent {
               )
               .toList(),
           blockType: blockType,
+          anchor: jsonString['anchor'],
         );
       case MarkdownBlockTypes.table:
         return TableJsonContent(
@@ -314,6 +317,7 @@ abstract class JsonContent {
               .toList(),
 
           headingNumber: jsonString['depth'],
+          anchor: jsonString['anchor'],
           depth: depth,
           textStyle: jsonString['depth'] == 1
               ? textTheme.displaySmall
@@ -581,15 +585,18 @@ class ListItemJsonContent extends JsonContent {
   @override
   WidgetSpan get rendererWidget => WidgetSpan(
     alignment: PlaceholderAlignment.middle,
-    child: Padding(
-      padding: EdgeInsets.only(left: 0 * 8),
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(children: [children.first.rendererWidget]),
+    child: ContentAnchor(
+      content: this,
+      child: Padding(
+        padding: EdgeInsets.only(left: 0 * 8),
+        child: Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(children: [children.first.rendererWidget]),
 
-            ...children.skip(1).map((e) => (e.rendererWidget)),
-          ],
+              ...children.skip(1).map((e) => (e.rendererWidget)),
+            ],
+          ),
         ),
       ),
     ),
@@ -608,9 +615,12 @@ class ImageCarouselJsonContent extends JsonContent {
   @override
   WidgetSpan get rendererWidget => WidgetSpan(
     alignment: PlaceholderAlignment.middle,
-    child: Padding(
-      padding: const EdgeInsets.only(top: 12.0),
-      child: ImagesViewer(viewerImages: images, height: 380),
+    child: ContentAnchor(
+      content: this,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: ImagesViewer(viewerImages: images, height: 380),
+      ),
     ),
   );
 }
@@ -643,13 +653,16 @@ class TableJsonContent extends JsonContent {
   @override
   WidgetSpan get rendererWidget => WidgetSpan(
     alignment: PlaceholderAlignment.middle,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TableViewer(
-        tableHeader: CustomTableRow.fromJson(headers),
-        tableRows: jsonRows
-            .map((List<String> jsonRow) => CustomTableRow.fromJson(jsonRow))
-            .toList(),
+    child: ContentAnchor(
+      content: this,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: TableViewer(
+          tableHeader: CustomTableRow.fromJson(headers),
+          tableRows: jsonRows
+              .map((List<String> jsonRow) => CustomTableRow.fromJson(jsonRow))
+              .toList(),
+        ),
       ),
     ),
   );
@@ -843,9 +856,12 @@ class ParagraphJsonContent extends JsonContent {
   final int headingNumber;
   final List<JsonContent> children;
 
+  final String? anchor;
+
   ParagraphJsonContent({
     required this.children,
     this.headingNumber = 0,
+    this.anchor,
     super.textStyle,
     required super.depth,
   }) : super(blockType: MarkdownBlockTypes.paragraph);
@@ -854,10 +870,13 @@ class ParagraphJsonContent extends JsonContent {
   WidgetSpan get rendererWidget => WidgetSpan(
     alignment: PlaceholderAlignment.middle,
 
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text.rich(
-        TextSpan(children: children.map((e) => (e.rendererWidget)).toList()),
+    child: ContentAnchor(
+      content: this,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Text.rich(
+          TextSpan(children: children.map((e) => (e.rendererWidget)).toList()),
+        ),
       ),
     ),
   );
@@ -876,15 +895,18 @@ class AdmonitionJsonContent extends JsonContent {
   @override
   WidgetSpan get rendererWidget => WidgetSpan(
     alignment: PlaceholderAlignment.middle,
-    child: InfoCard(
-      formattedTextWidget: Text.rich(
-        TextSpan(
-          children: children
-              .map((JsonContent jsonContent) => (jsonContent.rendererWidget))
-              .toList(),
+    child: ContentAnchor(
+      content: this,
+      child: InfoCard(
+        formattedTextWidget: Text.rich(
+          TextSpan(
+            children: children
+                .map((JsonContent jsonContent) => (jsonContent.rendererWidget))
+                .toList(),
+          ),
         ),
+        isWarning: blockType == MarkdownBlockTypes.warning,
       ),
-      isWarning: blockType == MarkdownBlockTypes.warning,
     ),
   );
 }
@@ -905,7 +927,13 @@ class CodeSnippetJsonContent extends JsonContent {
   WidgetSpan get rendererWidget => WidgetSpan(
     alignment: PlaceholderAlignment.middle,
 
-    child: CodeSnippetCard(textString: codeSnippet, language: snippetLanguage),
+    child: ContentAnchor(
+      content: this,
+      child: CodeSnippetCard(
+        textString: codeSnippet,
+        language: snippetLanguage,
+      ),
+    ),
   );
 }
 
@@ -914,8 +942,10 @@ class ExpansionTileJsonContent extends JsonContent {
   final List<JsonContent>? subtitle;
   final GlobalKey? key;
   final List<JsonContent> children;
+  final String? anchor;
   ExpansionTileJsonContent({
     this.key,
+    this.anchor,
     required super.blockType,
     super.textStyle,
     required this.title,
@@ -930,16 +960,19 @@ class ExpansionTileJsonContent extends JsonContent {
   @override
   WidgetSpan get rendererWidget => WidgetSpan(
     alignment: PlaceholderAlignment.middle,
-    child: RoundedExpansionTile(
-      key: key,
-      titleString: "",
-      titleWidget: Text.rich(
-        TextSpan(children: title.map((e) => (e.rendererWidget)).toList()),
+    child: ContentAnchor(
+      content: this,
+      child: RoundedExpansionTile(
+        key: key,
+        titleString: "",
+        titleWidget: Text.rich(
+          TextSpan(children: title.map((e) => (e.rendererWidget)).toList()),
+        ),
+        subtitleWidget: subtitleWidgetSpan.isEmpty
+            ? null
+            : Text.rich(TextSpan(children: subtitleWidgetSpan)),
+        children: children.map((e) => Text.rich(e.rendererWidget)).toList(),
       ),
-      subtitleWidget: subtitleWidgetSpan.isEmpty
-          ? null
-          : Text.rich(TextSpan(children: subtitleWidgetSpan)),
-      children: children.map((e) => Text.rich(e.rendererWidget)).toList(),
     ),
   );
 }

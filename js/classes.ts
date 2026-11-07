@@ -179,6 +179,7 @@ export class InlineCodeContent extends SuperHolderContent {
 
 export class HeadingContent extends ParagraphContent {
   depth: number;
+  anchor?: string;
   constructor(children: Content[], depth: number) {
     super(children);
     this.depth = depth;
@@ -186,8 +187,9 @@ export class HeadingContent extends ParagraphContent {
 
   override toHTML(): string {
     const innerHTML = this.children.map((c) => c.toHTML()).join("\n");
+    const id = this.anchor ? ` id="${this.anchor}"` : "";
 
-    return `<h${this.depth}>
+    return `<h${this.depth}${id}>
     ${innerHTML}
     </h${this.depth}>`;
   }
@@ -415,6 +417,7 @@ export class HorizontalDividerContent extends Content {
 export class ExpansionTileContent extends SuperHolderContent {
   title: Content[];
   subtitle: Content[];
+  anchor?: string;
 
   constructor(title: Content[], subtitle: Content[], children: Content[]) {
     super("expansionTile", children);
@@ -427,7 +430,8 @@ export class ExpansionTileContent extends SuperHolderContent {
     const innerHTML = this.children.map((c) => c.toHTML()).join("\n");
     const innerTitle = this.title.map((c) => c.toHTML()).join("\n");
     const innerSubtitle = this.subtitle.map((c) => c.toHTML()).join("\n");
-    return `<details open>
+    const id = this.anchor ? ` id="${this.anchor}"` : "";
+    return `<details${id} open>
     <summary>
       <strong>${innerTitle}</strong>
       <span>${innerSubtitle}</span>
@@ -439,6 +443,7 @@ export class ExpansionTileContent extends SuperHolderContent {
   public toJSON(): Record<string, any> {
     return {
       type: this.type,
+      anchor: this.anchor,
       title: this.title,
       subtitle: this.subtitle,
       children: this.children,

@@ -6,4 +6,5 @@ Made using Flutter for Web.
 
 The Markdowns contain the relevant information for each page. `mdast` is used to read the markdowns, which then emits:
 - JSON files that Flutter uses to dynamically render the contents as Widgets
+- `jsons/search_index.json`, the full-text search index. Every heading and expansion tile gets an `anchor`, which search results and the "On This Page" panel scroll to
 - Static HTML files for SEO purposes.

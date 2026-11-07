@@ -7,8 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wayves_wiki/bloc/search_bloc.dart';
 import 'package:wayves_wiki/bloc/search_events.dart';
 import 'package:wayves_wiki/bloc/search_states.dart';
-import 'package:wayves_wiki/constants/search_entries.dart';
 import 'package:wayves_wiki/helper_functions/rich_text_from_ticks.dart';
+import 'package:wayves_wiki/models/content_target.dart';
 import 'package:wayves_wiki/models/search_entry.dart';
 import 'package:wayves_wiki/widgets/debouncer.dart';
 import 'package:wayves_wiki/widgets/rounded_expansion_tile.dart';
@@ -79,8 +79,31 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    void handleTap(SearchEntry searchEntry) {
-      Beamer.of(context).beamToNamed(searchEntry.route);
+    void handleTap(SearchEntry searchEntry, SearchHit searchHit) {
+      if (searchController.isAttached && searchController.isOpen) {
+        searchController.closeView(searchController.text);
+      }
+
+      PendingContentTarget.request.value = (
+        searchEntry.route,
+        searchHit.target,
+      );
+
+      if ((context.currentBeamLocation.state as BeamState).uri.path !=
+          searchEntry.route) {
+        Beamer.of(context).beamToNamed(searchEntry.route);
+      }
+
+      for (
+        ScaffoldState? scaffold = Scaffold.maybeOf(context);
+        scaffold != null;
+        scaffold = scaffold.context.findAncestorStateOfType<ScaffoldState>()
+      ) {
+        if (scaffold.isDrawerOpen) {
+          scaffold.closeDrawer();
+          break;
+        }
+      }
     }
 
     return SizedBox(
@@ -99,12 +122,9 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               viewTrailing: [
                 IconButton(
                   onPressed: () {
-                    BlocProvider.of<SearchBloc>(context).add(
-                      InitiateSearchEvent(
-                        searchString: "",
-                        currentSearchEntries: searchEntries,
-                      ),
-                    );
+                    BlocProvider.of<SearchBloc>(
+                      context,
+                    ).add(const InitiateSearchEvent(searchString: ""));
                     setState(() {
                       innerTextEditingController.text = "";
                       currentSearchText = "";
@@ -117,12 +137,9 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               ],
               onChanged: (value) {
                 _debouncer.run(() {
-                  BlocProvider.of<SearchBloc>(context).add(
-                    InitiateSearchEvent(
-                      currentSearchEntries: searchEntries,
-                      searchString: value,
-                    ),
-                  );
+                  BlocProvider.of<SearchBloc>(
+                    context,
+                  ).add(InitiateSearchEvent(searchString: value));
                 });
               },
 
@@ -175,12 +192,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                         buildWhen: (previous, current) =>
                                             previous != current,
                                         builder: (context, state) {
-                                          innerTextEditingController.text !=
-                                                  state.searchString
-                                              ? innerTextEditingController
-                                                        .text =
-                                                    state.searchString
-                                              : null;
                                           return SearchBar(
                                             hintText: "Enter Search Text",
                                             autoFocus: true,
@@ -191,10 +202,8 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                                   BlocProvider.of<SearchBloc>(
                                                     context,
                                                   ).add(
-                                                    InitiateSearchEvent(
+                                                    const InitiateSearchEvent(
                                                       searchString: "",
-                                                      currentSearchEntries:
-                                                          searchEntries,
                                                     ),
                                                   );
                                                   setState(() {
@@ -220,8 +229,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                                                   context,
                                                 ).add(
                                                   InitiateSearchEvent(
-                                                    currentSearchEntries:
-                                                        searchEntries,
                                                     searchString: value,
                                                   ),
                                                 );
@@ -322,7 +329,7 @@ class SearchResultsView extends StatelessWidget {
   final CustomSearchBar widget;
   final FocusNode innerSearchBarFocusNode;
   final SearchController searchController;
-  final Function(SearchEntry) handleTap;
+  final Function(SearchEntry, SearchHit) handleTap;
   final OverlayPortalController overlayPortalController;
 
   @override
@@ -331,7 +338,7 @@ class SearchResultsView extends StatelessWidget {
       listener: (BuildContext context, SearchState state) {},
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
-        if (state is SearchingState) {
+        if (state is SearchingState || state is InitialState) {
           return const Align(
             alignment: Alignment.center,
             child: CircularProgressIndicator(),
@@ -350,9 +357,7 @@ class SearchResultsView extends StatelessWidget {
 
         return SearchResultsListView(
           theme: widget.theme,
-          searchEntries: state is InitialState
-              ? searchEntries
-              : (state as FetchedSearchResultsState).searchEntries,
+          searchEntries: (state as FetchedSearchResultsState).searchEntries,
           searchBarFocusNode: innerSearchBarFocusNode,
           overlayPortalController: overlayPortalController,
           handleTap: handleTap,
@@ -376,7 +381,7 @@ class SearchResultsListView extends StatelessWidget {
   final FocusNode searchBarFocusNode;
   final OverlayPortalController overlayPortalController;
   final List<SearchEntry> searchEntries;
-  final Function(SearchEntry) handleTap;
+  final Function(SearchEntry, SearchHit) handleTap;
 
   @override
   Widget build(BuildContext context) {
@@ -555,29 +560,11 @@ class SearchResultsListView extends StatelessWidget {
                                   ? overlayPortalController.hide()
                                   : null;
 
-                              (context.currentBeamLocation.state as BeamState)
-                                          .uri
-                                          .path !=
-                                      searchEntry.route
-                                  ? {
-                                      await Future.delayed(
-                                        const Duration(microseconds: 200),
-                                      ).then((value) => handleTap(searchEntry)),
-                                    }
-                                  : null;
-
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                final context = null;
-                                if (context != null) {
-                                  Scrollable.ensureVisible(
-                                    context,
-                                    duration: const Duration(milliseconds: 500),
-                                    curve: Curves.fastEaseInToSlowEaseOut,
-                                  );
-                                  Scaffold.of(context).closeDrawer();
-                                  Scaffold.of(context).closeEndDrawer();
-                                }
-                              });
+                              await Future.delayed(
+                                const Duration(microseconds: 200),
+                              ).then(
+                                (value) => handleTap(searchEntry, searchHit),
+                              );
                             },
                             title: Text.rich(
                               HelperFunctions.getRichTextFromTicks(
